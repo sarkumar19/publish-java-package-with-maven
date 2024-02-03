@@ -4,7 +4,6 @@
 MAVEN_GOALS="clean deploy"
 
 # Path to the accepted and rejected directories
-ACCEPTED_DIR="accepted"
 REJECTED_DIR="rejected"
 NOTIFICATIONS_DIR="notifications"
 
