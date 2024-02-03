@@ -1,20 +1,13 @@
 package com.mycompany.app;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 /**
- * Unit test for simple App.
+ * Hello world!
  */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+
+        // Introduce an error - Division by zero to cause a compilation error
+        int result = 10 / 0;
     }
 }
