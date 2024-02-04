@@ -19,5 +19,3 @@ jobs:
           distribution: 'adopt'
       - name: Publish package
         run: mvn --batch-mode deploy
-        env:
-          GITHUB_TOKEN: ${{ JAVA.TOKEN }}  # Update the secret name to match what you added
