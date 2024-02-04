@@ -1,6 +1,6 @@
-env:
+ env:
   GITHUB_TOKEN: '${{ secrets.JAVA_TOKEN }}'
-jobs:
+   jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
