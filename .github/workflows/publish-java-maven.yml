@@ -1,5 +1,10 @@
 name: Publish package to GitHub Packages
-on: push
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   publish:
     runs-on: ubuntu-latest 
@@ -15,4 +20,4 @@ jobs:
       - name: Publish package
         run: mvn --batch-mode deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.JAVA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Update the secret name to match what you added
