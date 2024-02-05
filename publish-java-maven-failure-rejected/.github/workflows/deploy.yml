@@ -1,0 +1,30 @@
+name: Maven Deploy
+
+on:
+    push:
+          branches:
+                  - main
+
+          jobs:
+              build:
+                    runs-on: ubuntu-latest
+
+                          steps:
+                                - name: Checkout Repository
+                                        uses: actions/checkout@v2
+
+                                              - name: Set up JDK
+                                                      uses: actions/setup-java@v2
+                                                              with:
+                                                                        distribution: 'adopt'
+                                                                                  java-version: '11'
+
+                                                                                        - name: Build and Deploy
+                                                                                                run: |
+                                                                                                          chmod +x publish.sh
+                                                                                                                  ./publish.sh
+
+                                                                                                                      - name: Notify on Failure
+                                                                                                                              if: failure()
+                                                                                                                                      run: echo "Deployment to GitHub Packages failed."
+
