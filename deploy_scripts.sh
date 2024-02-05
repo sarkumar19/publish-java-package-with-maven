@@ -1,28 +1,54 @@
 #!/bin/bash
 
-# Maven goals for building and deploying
-MAVEN_GOALS="clean deploy"
+# Set Maven Coordinates from POM file
+GROUP_ID=$(xmlstarlet sel -N ns="http://maven.apache.org/POM/4.0.0" -t -v "/ns:project/ns:groupId" pom.xml)
+ARTIFACT_ID=$(xmlstarlet sel -N ns="http://maven.apache.org/POM/4.0.0" -t -v "/ns:project/ns:artifactId" pom.xml)
+VERSION=$(xmlstarlet sel -N ns="http://maven.apache.org/POM/4.0.0" -t -v "/ns:project/ns:version" pom.xml)
 
-# Path to the accepted and rejected directories
+# Set GitHub Packages Repository
+REPOSITORY="https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven"
+USERNAME="your-github-username"
+TOKEN="your-github-token"
+
+# Set Paths
+ARTIFACT_DIR="target"
 REJECTED_DIR="rejected"
-NOTIFICATIONS_DIR="notifications"
 
-# Execute Maven build
-mvn $MAVEN_GOALS
+# Function to Create Rejected Directory
+createRejectedDirectory() {
+  mkdir -p "$REJECTED_DIR"
+}
 
-# Check the exit status of the Maven build
+# Function to Move Artifacts to Rejected Directory
+moveArtifactsToRejected() {
+  mv "$ARTIFACT_DIR"/* "$REJECTED_DIR"/
+}
+
+# Function for Notification
+sendNotification() {
+  # Add your notification logic here (e.g., sending an email, logging, etc.)
+  echo "Publishing failed. Artifacts moved to the rejected folder."
+}
+
+# Maven Publish
+mvn deploy:deploy-file \
+  -DgroupId="$GROUP_ID" \
+  -DartifactId="$ARTIFACT_ID" \
+  -Dversion="$VERSION" \
+  -Durl="$REPOSITORY" \
+  -DrepositoryId=github \
+  -Dfile="$ARTIFACT_DIR"/"$ARTIFACT_ID"-"$VERSION".jar \
+  -DpomFile="$ARTIFACT_DIR"/"$ARTIFACT_ID"-"$VERSION".pom \
+  -Dpackaging=jar \
+  -DgeneratePom=true \
+  -DgeneratePom.description="GitHub Packages"
+
+# Check Maven Exit Code
 if [ $? -eq 0 ]; then
-	    echo "Maven build and deployment succeeded."
-    else
-	        echo "Maven build or deployment failed. Moving artifacts to rejected folder and triggering notification."
-		    
-		    # Move artifacts to the rejected folder
-		        mv target/*.jar "$REJECTED_DIR/"
-
-			    # Trigger a notification
-			        echo "Maven build or deployment failed. Reason: Your reason here." > "$NOTIFICATIONS_DIR/notification.txt"
-				    
-				    # Optionally, you might want to exit the script with a non-zero status to indicate failure
-				        exit 1
+  echo "Publishing successful."
+else
+  echo "Publishing failed."
+  createRejectedDirectory
+  moveArtifactsToRejected
+  sendNotification
 fi
-
