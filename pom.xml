@@ -11,7 +11,7 @@
   <name>my-app</name>
   <url>http://www.example.com</url>
 
-  <packaging>jar</packaging> <!-- Specify packaging type as JAR -->
+  <packaging>war</packaging> <!-- Specify packaging type as WAR -->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,11 +38,11 @@
 
   <build>
     <plugins>
-      <!-- Maven JAR Plugin -->
+      <!-- Maven WAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
         <configuration>
           <!-- Optionally configure additional settings here -->
         </configuration>
