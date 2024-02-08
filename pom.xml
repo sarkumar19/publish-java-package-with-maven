@@ -37,14 +37,14 @@
 
   <build>
     <plugins>
-      <!-- Maven WAR Plugin -->
+      <!-- Maven JAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
+        <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.1</version>
         <configuration>
           <!-- Specify the custom output directory -->
-          <warSourceDirectory>${project.build.directory}/custom-webapp</warSourceDirectory>
+          <jarSourceDirectory>${project.build.directory}/custom-webapp</jarSourceDirectory>
         </configuration>
       </plugin>
 
