@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
@@ -10,13 +11,21 @@
   <name>my-app</name>
   <url>http://www.example.com</url>
 
-  <packaging>war</packaging> <!-- Specify packaging type as WAR -->
+  <packaging>jar</packaging> <!-- Specify packaging type as JAR -->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>
@@ -25,20 +34,34 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    <!-- Add any additional dependencies for your web application -->
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Maven WAR Plugin -->
+      <!-- Maven JAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.1</version> <!-- Specify the version of the War Plugin -->
-
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
         <configuration>
           <!-- Optionally configure additional settings here -->
         </configuration>
+      </plugin>
+
+      <!-- Maven Deploy Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <executions>
+          <execution>
+            <id>deploy-artifacts</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
