@@ -6,7 +6,7 @@
 
   <groupId>com.mycompany.app1</groupId>
   <artifactId>java-maven1</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 
   <name>my-app</name>
   <url>http://www.example.com</url>
