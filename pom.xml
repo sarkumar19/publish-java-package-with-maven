@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.mycompany.app1</groupId>
-  <artifactId>java-maven</artifactId>
+  <artifactId>java-maven1</artifactId>
   <version>1.0</version>
 
   <name>my-app</name>
