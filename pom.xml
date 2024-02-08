@@ -3,8 +3,8 @@
   
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mycompany.app1</groupId>
-  <artifactId>java-maven1</artifactId>
+  <groupId>com.mycompany.app2</groupId>
+  <artifactId>java-maven2</artifactId>
   <version>1.1</version>
 
   <name>my-app</name>
