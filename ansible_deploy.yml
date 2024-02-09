@@ -1,0 +1,16 @@
+- name: Deploy Java package on Apache Tomcat locally
+  hosts: localhost
+  become: true
+  vars:
+    java_package_name: java-maven
+    java_package_version: "1.0-SNAPSHOT"
+    tomcat_webapps_dir: "/mnt/C/Program Files/ApacheSoftware Foundation/Tomcat 10.1/webapps"
+    tasks:
+     - name: Copy Java package (JAR file) to Tomcat webapps directory
+       copy:
+         src: "/mnt/C/Users/Admin/publish-package-maven-failure-success/publish-java-package-with-maven/target/java-maven-1.0-SNAPSHOT.jar"
+         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
+         remote_src: true
+
+     - name: Restart Tomcat
+    command: "{{ tomcat_webapps_dir }}/../bin/shutdown.sh && {{ tomcat_webapps_dir }}/../bin/startup.sh"
