@@ -16,7 +16,7 @@
 
     - name: Copy Java package (JAR file) to Tomcat webapps directory
       copy:
-        src: "/mnt/c/Users/Admin/publish-package-maven-failure-success/publish-java-package-with-maven/target/java-maven-1.0-SNAPSHOT.jar"
+        src: "/mnt/c/Users/Admin/publish-package-maven-failure-success/publish-java-package-with-maven/target/java-maven3-1.1.jar"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
 
     - name: Start Tomcat
