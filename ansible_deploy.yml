@@ -1,27 +1,23 @@
 ---
 - name: Deploy Java package on Apache Tomcat locally
   hosts: localhost
-  connection: local  # Specify local connection
+  connection: local
   become: true
-  gather_facts: false  # Disable gathering facts because "Gathering Facts" task is generally used to collect information about remote hosts
+  gather_facts: false
   vars:
     java_package_name: java-maven
     java_package_version: "1.0-SNAPSHOT"
-    tomcat_bin_dir: "/mnt/c/Program Files/Apache Software Foundation/Tomcat 8.5/bin"
-    tomcat_webapps_dir: "/mnt/c/Program Files/Apache Software Foundation/Tomcat 8.5/webapps"
+    tomcat_bin_dir: "/opt/tomcat/bin"
+    tomcat_webapps_dir: "/opt/tomcat/webapps"
   tasks:
     - name: Stop Tomcat
-      command: "{{ tomcat_bin_dir }}/shutdown.bat"
+      command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
-      become: true
 
     - name: Copy Java package (JAR file) to Tomcat webapps directory
       copy:
         src: "/mnt/c/Users/Admin/publish-package-maven-failure-success/publish-java-package-with-maven/target/java-maven-1.0-SNAPSHOT.jar"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
-      become: true
 
     - name: Start Tomcat
-      command: "{{ tomcat_bin_dir }}/startup.bat"
-      become: true
-
+      command: "{{ tomcat_bin_dir }}/startup.sh"
