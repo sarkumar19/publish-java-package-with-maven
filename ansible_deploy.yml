@@ -40,7 +40,7 @@
         git add target/java-maven4-1.1.jar
         git commit -m "Add Java package JAR"
       args:
-        executable: /bin/bash
+        executable: /bin/
 
     - name: Push changes to GitHub
       shell: |
