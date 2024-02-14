@@ -19,5 +19,16 @@
         src: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/java-maven4-1.1.jar"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
 
+    - name: Upload Java package to GitHub
+      shell: |
+        cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/
+        git add java-maven4-1.1.jar
+        git commit -m "Add Java package"
+        git push origin main
+      args:
+        executable: /bin/bash
+      become: false
+      ignore_errors: yes
+
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
