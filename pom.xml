@@ -4,8 +4,8 @@
   
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mycompany.app3</groupId>
-  <artifactId>java-maven3</artifactId>
+  <groupId>com.mycompany.app4</groupId>
+  <artifactId>java-maven4</artifactId>
   <version>1.1</version>
 
   <name>my-app</name>
