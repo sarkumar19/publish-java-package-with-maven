@@ -15,19 +15,24 @@
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
 
-    - name: Copy Java package (JAR file) to Tomcat webapps directory
+    - name: Download Java package from GitHub Packages
+      uri:
+        url: "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
+        dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.jar"
+        method: GET
+        status_code: 200
+      register: download_result
+      until: download_result is succeeded
+      retries: 3
+      delay: 10
+
+    - name: Move Java package to Tomcat webapps directory
       copy:
         src: "{{ local_git_repo_path }}/target/java-maven4-1.1.jar"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
-
-    - name: Add Java package JAR to local Git repository
-      shell: |
-        cp "{{ local_git_repo_path }}/target/java-maven4-1.1.jar" "{{ local_git_repo_path }}/target/"
-      args:
-        executable: /bin/bash
 
     - name: Commit changes to local Git repository
       shell: |
