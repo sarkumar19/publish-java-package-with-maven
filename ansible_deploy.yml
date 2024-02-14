@@ -16,7 +16,7 @@
 
     - name: Copy Java package (JAR file) to Tomcat webapps directory
       copy:
-        src: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/java-maven3-1.1.jar"
+        src: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/java-maven4-1.1.jar"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
 
     - name: Start Tomcat
