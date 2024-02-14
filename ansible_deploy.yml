@@ -9,26 +9,39 @@
     java_package_version: "1.0-SNAPSHOT"
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
+    local_git_repo_path: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven"
   tasks:
     - name: Stop Tomcat
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
 
-    - name: Upload Java package to GitHub
+    - name: Copy Java package (JAR file) to Tomcat webapps directory
+      copy:
+        src: "{{ local_git_repo_path }}/target/java-maven4-1.1.jar"
+        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
+
+    - name: Start Tomcat
+      command: "{{ tomcat_bin_dir }}/startup.sh"
+
+    - name: Add Java package JAR to local Git repository
       shell: |
-        cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/
-        git add java-maven4-1.1.jar
-        git commit -m "Add Java package"
+        cp "{{ local_git_repo_path }}/target/java-maven4-1.1.jar" "{{ local_git_repo_path }}/target/"
+      args:
+        executable: /bin/bash
+
+    - name: Commit changes to local Git repository
+      shell: |
+        cd "{{ local_git_repo_path }}"
+        git add target/java-maven4-1.1.jar
+        git commit -m "Add Java package JAR"
+      args:
+        executable: /bin/bash
+
+    - name: Push changes to GitHub
+      shell: |
+        cd "{{ local_git_repo_path }}"
         git push origin main
       args:
         executable: /bin/bash
       become: false
       ignore_errors: yes
-
-    - name: Copy Java package (JAR file) to Tomcat webapps directory
-      copy:
-        src: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/java-maven4-1.1.jar"
-        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
-
-    - name: Start Tomcat
-      command: "{{ tomcat_bin_dir }}/startup.sh"
