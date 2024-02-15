@@ -35,6 +35,10 @@ jobs:
       - name: Start Tomcat
         run: sudo /opt/tomcat/bin/startup.sh
 
+      - name: Check for changes in Git repository
+        run: git status --porcelain
+        id: git-status
+
       - name: Commit changes to local Git repository
         run: |
           cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
