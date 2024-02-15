@@ -6,8 +6,9 @@ on:
       - main
 
 jobs:
-  build_and_deploy:
+  build_publish_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,6 +22,11 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode clean package
 
+      - name: Publish Maven Package
+        run: mvn deploy -DskipTests=true --settings settings.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy
         runs-on: self-hosted
         steps:
@@ -30,11 +36,9 @@ jobs:
           - name: Download Java package from GitHub Packages
             run: |
               curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
-
           - name: Grant execute permission to startup.sh
             run: | 
               sudo chmod +x /opt/tomcat/bin/startup.sh
-
           - name: Start Tomcat
             run: sudo /opt/tomcat/bin/startup.sh
 
