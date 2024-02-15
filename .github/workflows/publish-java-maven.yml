@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
- deploy:
+  deploy:
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -35,18 +35,23 @@ jobs:
       - name: Start Tomcat
         run: sudo /opt/tomcat/bin/startup.sh
 
-      - name: Check for changes in Git repository
-        run: git status --porcelain
+      - name: Check if target directory exists
+        run: test -d target && echo "Directory exists" || echo "Directory does not exist"
+
+      - name: Check for changes in target/java-maven3-1.1.jar
+        run: git status --porcelain target/java-maven3-1.1.jar
         id: git-status
 
       - name: Commit changes to local Git repository
+        if: steps.git-status.outputs.stdout != ''
         run: |
           cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
-          git add target/java-maven3-1.1.jar
+          git add .
           git commit -m "Add Java package JAR"
         shell: bash
 
       - name: Push changes to GitHub
+        if: steps.git-status.outputs.stdout != ''
         run: |
           cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
           git push origin main
