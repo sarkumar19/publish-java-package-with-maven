@@ -6,14 +6,27 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: self-hosted
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Add untracked files
-        run: git add .
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: adopt
+
+      - name: Build with Maven
+        run: mvn --batch-mode clean package
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
@@ -30,7 +43,7 @@ jobs:
 
       - name: Grant execute permission to startup.sh
         run: | 
-          sudo chmod +x /opt/tomcat/bin/startup.sh
+         sudo chmod +x /opt/tomcat/bin/startup.sh
 
       - name: Start Tomcat
         run: sudo /opt/tomcat/bin/startup.sh
@@ -38,14 +51,13 @@ jobs:
       - name: Check if target directory exists
         run: test -d target && echo "Directory exists" || echo "Directory does not exist"
 
-      - name: Check for changes in target/my-file.jar
-        run: git status --porcelain target/my-file.jar
+      - name: Check for changes in target/java-maven3-1.1.jar
+        run: git status --porcelain target/java-maven3-1.1.jar
         id: git-status
 
       - name: Commit changes to local Git repository
         if: steps.git-status.outputs.stdout != ''
         run: |
-          cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
           git add .
           git commit -m "Add Java package JAR"
         shell: bash
@@ -53,7 +65,6 @@ jobs:
       - name: Push changes to GitHub
         if: steps.git-status.outputs.stdout != ''
         run: |
-          cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
           git push origin main
         shell: bash
         env:
