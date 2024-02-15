@@ -30,7 +30,7 @@ jobs:
          sudo chmod +x /opt/tomcat/bin/startup.sh
 
       - name: Start Tomcat
-        run: /opt/tomcat/bin/startup.sh
+        run: sudo /opt/tomcat/bin/startup.sh
 
       - name: Commit changes to local Git repository
         run: |
