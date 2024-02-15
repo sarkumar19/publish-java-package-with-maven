@@ -40,9 +40,11 @@ jobs:
       - name: Stop Tomcat
         run: /opt/tomcat/bin/shutdown.sh || true
 
-      - name: Download Java package from GitHub Packages
+      - name: Download Test Java package from GitHub Packages
         run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://example.com/path/to/your/test/java-maven.jar"
+          # Replace the URL with the actual URL of your test JAR file
+
       - name: Grant execute permission to startup.sh
         run: sudo chmod +x /opt/tomcat/bin/startup.sh
 
