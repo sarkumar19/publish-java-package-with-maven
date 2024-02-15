@@ -6,11 +6,8 @@ on:
       - main
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,7 +18,52 @@ jobs:
           java-version: '11'
           distribution: adopt
 
-      - name: Publish package
-        run: mvn --batch-mode deploy
+      - name: Build with Maven
+        run: mvn --batch-mode clean package
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: adopt
+
+      - name: Stop Tomcat
+        run: /opt/tomcat/bin/shutdown.sh || true
+
+      - name: Download Java package from GitHub Packages
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
+      - name: Grant execute permission to startup.sh
+        run: | 
+         sudo chmod +x /opt/tomcat/bin/startup.sh
+      - name: Start Tomcat
+        run: sudo /opt/tomcat/bin/startup.sh
+
+      - name: Check if target directory exists
+        run: test -d target && echo "Directory exists" || echo "Directory does not exist"
+
+      - name: Check for changes in target/java-maven3-1.1.jar
+        run: git status --porcelain target/java-maven3-1.1.jar
+        id: git-status
+
+      - name: Commit changes to local Git repository
+        if: steps.git-status.outputs.stdout != ''
+        run: |
+          git add .
+          git commit -m "Add Java package JAR"
+        shell: bash
+
+      - name: Push changes to GitHub
+        if: steps.git-status.outputs.stdout != ''
+        run: |
+          git push origin main
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
