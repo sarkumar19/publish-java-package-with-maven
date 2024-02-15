@@ -42,7 +42,7 @@ jobs:
 
       - name: Download Java package from GitHub Packages
         run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.2/java-maven4-1.2.jar"
       - name: Grant execute permission to startup.sh
         run: sudo chmod +x /opt/tomcat/bin/startup.sh
 
