@@ -4,8 +4,8 @@
     ...
     <server>
       <id>github</id>
-      <username>${env.GITHUB_USERNAME}pravesh-77
-      <password>${env.GITHUB_TOKEN}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
+      <username>${env.GITHUB_USERNAME}pravesh-77</username>
+      <password>${env.GITHUB_TOKEN}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</password>
     </server>
     ...
   </servers>
