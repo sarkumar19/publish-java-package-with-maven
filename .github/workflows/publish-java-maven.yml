@@ -35,7 +35,7 @@ jobs:
       - name: Commit changes to local Git repository
         run: |
           cd /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven
-          git add target/java-maven4-1.1.jar
+          git add target/java-maven3-1.1.jar
           git commit -m "Add Java package JAR"
         shell: bash
 
