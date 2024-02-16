@@ -84,7 +84,7 @@ jobs:
       - name: Generate Artifact URL
         id: artifact-url
         run: |
-          ARTIFACT_URL="http://localhost:8080/java-maven4-1.1.jar" # Update the URL with your artifact name
+          ARTIFACT_URL="http://localhost:8080/java-maven4-1.2.jar" # Update the URL with your artifact name
           echo "::set-output name=url::$ARTIFACT_URL"
         shell: bash
 
