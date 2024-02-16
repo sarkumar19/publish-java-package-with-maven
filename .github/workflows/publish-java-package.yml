@@ -21,6 +21,13 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode clean package
 
+      # Add a step to upload artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-artifact
+          path: target/*.jar
+
   deploy:
     runs-on: self-hosted
     needs: build
