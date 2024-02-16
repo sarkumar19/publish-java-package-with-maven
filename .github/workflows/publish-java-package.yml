@@ -44,6 +44,7 @@ jobs:
       - name: Configure settings.xml for Maven
         run: |
           echo "<settings><servers><server><id>github</id><username>${{ secrets.GITHUB_USERNAME }}</username><password>${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>" > settings.xml
+          
       - name: Stop Tomcat
         run: /opt/tomcat/bin/shutdown.sh || true
 
@@ -51,6 +52,7 @@ jobs:
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o /opt/tomcat/webapps/java-maven2-1.1.jar -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven2/1.1/java-maven2-1.1.jar"
           # Update the URL and filename according to your requirements
+          
       - name: Grant execute permission to startup.sh
         run: sudo chmod +x /opt/tomcat/bin/startup.sh
 
@@ -78,3 +80,14 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Artifact URL
+        id: artifact-url
+        run: |
+          ARTIFACT_URL="http://localhost:8080/java-maven4-1.1.jar" # Update the URL with your artifact name
+          echo "::set-output name=url::$ARTIFACT_URL"
+        shell: bash
+
+      - name: Use Artifact URL
+        run: |
+          echo "Artifact URL: ${{ steps.artifact-url.outputs.url }}"
