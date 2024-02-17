@@ -7,7 +7,6 @@
   <groupId>com.mycompany.app4</groupId>
   <artifactId>java-maven4</artifactId>
   <version>1.1</version>
-  <packaging>war</packaging>
 
   <name>my-app</name>
   <url>http://www.example.com</url>
@@ -46,6 +45,8 @@
         <version>3.2.2</version>
         <configuration>
           <warName>${project.artifactId}</warName>
+          <!-- Generate a default web.xml -->
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
     </plugins>
