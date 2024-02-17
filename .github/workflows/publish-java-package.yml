@@ -42,11 +42,12 @@ jobs:
       
       - name: Download Java package from GitHub Packages
         run: |
-          wget -S --header="Authorization: token ${{ secrets.GIT_TOKEN }}" \
-               -O /opt/tomcat/webapps/java-maven4.war \
-               -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
+          curl -sSfL \
+               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -o /opt/tomcat/webapps/java-maven4.war \
+               "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
           # Update the URL and filename according to your requirements
           
       - name: Restart Tomcat
         run: |
-         /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
+          /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
