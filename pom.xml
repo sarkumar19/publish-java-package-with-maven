@@ -38,20 +38,14 @@
 
   <build>
     <plugins>
-      <!-- Maven Deploy Plugin -->
+      <!-- Maven WAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.0.0-M1</version>
-        <executions>
-          <execution>
-            <id>deploy-artifacts</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <warName>${project.artifactId}</warName>
+        </configuration>
       </plugin>
     </plugins>
   </build>
