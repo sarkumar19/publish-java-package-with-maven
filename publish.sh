@@ -37,9 +37,9 @@ mvn deploy:deploy-file \
   -Dversion="$VERSION" \
   -Durl="$REPOSITORY" \
   -DrepositoryId=github \
-  -Dfile="$ARTIFACT_DIR"/"$ARTIFACT_ID"-"$VERSION".jar \
+  -Dfile="$ARTIFACT_DIR"/"$ARTIFACT_ID"-"$VERSION".war \
   -DpomFile="$ARTIFACT_DIR"/"$ARTIFACT_ID"-"$VERSION".pom \
-  -Dpackaging=jar \
+  -Dpackaging=war \
   -DgeneratePom=true \
   -DgeneratePom.description="GitHub Packages"
 
