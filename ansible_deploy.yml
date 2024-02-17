@@ -5,8 +5,8 @@
   become: true
   gather_facts: false
   vars:
-    java_package_name: java-maven
-    java_package_version: "1.0-SNAPSHOT"
+    java_package_name: java-maven4
+    java_package_version: "1.1"
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
     local_git_repo_path: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven"
@@ -17,8 +17,8 @@
 
     - name: Download Java package from GitHub Packages
       uri:
-        url: "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.jar"
-        dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.jar"
+        url: "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
+        dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         method: GET
         status_code: 200
       register: download_result
@@ -28,8 +28,8 @@
 
     - name: Move Java package to Tomcat webapps directory
       copy:
-        src: "{{ local_git_repo_path }}/target/java-maven4-1.1.jar"
-        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.jar"
+        src: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
+        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
@@ -37,8 +37,8 @@
     - name: Commit changes to local Git repository
       shell: |
         cd "{{ local_git_repo_path }}"
-        git add target/java-maven4-1.1.jar
-        git commit -m "Add Java package JAR"
+        git add target/java-maven4-1.1.war
+        git commit -m "Add Java package WAR"
       args:
         executable: /bin/
 
