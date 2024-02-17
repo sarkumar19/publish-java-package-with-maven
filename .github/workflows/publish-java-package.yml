@@ -37,12 +37,16 @@ jobs:
 
       # Add any necessary setup steps for Tomcat deployment here
       
+      - name: Make webapps directory
+        run: mkdir -p /opt/tomcat/webapps
+      
       - name: Download Java package from GitHub Packages
         run: |
-          wget -header="Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -o /opt/tomcat/webapps/java-maven4.war \
+          wget -q --header="Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -O /opt/tomcat/webapps/java-maven4.war \
                -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
           # Update the URL and filename according to your requirements
           
       - name: Restart Tomcat
-        run: /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
+        run: |
+         /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
