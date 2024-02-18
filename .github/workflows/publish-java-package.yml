@@ -19,22 +19,12 @@ jobs:
           distribution: adopt
 
       - name: Build with Maven
-        run: mvn --batch-mode clean package -X
-
-      - name: Clear GITHUB_TOKEN
         run: |
-          echo "::unset-env name=GITHUB_TOKEN"
-
-      - name: Authenticate to GitHub Packages
-        run: echo "***" | gh auth login --with-token
+          echo "<settings><servers><server><id>github</id><username>${{ secrets.GITHUB_USERNAME }}</username><password>${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>" > ~/.m2/settings.xml
+          mvn --batch-mode clean package -X
 
       - name: Publish WAR to GitHub Packages
-        run: |
-          gh package repo upload pravesh-77/publish-java-package-with-maven \
-            --file target/java-maven4-1.1.war \
-            --name java-maven4 \
-            --version 1.1 \
-            --package-type war
+        run: mvn deploy
 
   deploy:
     runs-on: ubuntu-latest
