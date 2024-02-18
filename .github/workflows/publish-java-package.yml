@@ -18,12 +18,12 @@ jobs:
           java-version: '11'
           distribution: adopt
 
-      - name: Build with Maven (enable debug logging)
-        run: mvn --batch-mode -X clean package  # Add -X flag for debug logging
+      - name: Build with Maven (debug mode)
+        run: mvn --batch-mode clean package -X
 
-      - name: Publish WAR to GitHub Packages (enable debug logging)
+      - name: Publish WAR to GitHub Packages
         run: |
-          echo "${{ secrets.GH_PACKAGE_TOKEN }}" | mvn -X deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
+          echo "${{ secrets.GH_PACKAGE_TOKEN }}" | mvn deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -X
 
   deploy:
     runs-on: ubuntu-latest
