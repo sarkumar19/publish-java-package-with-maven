@@ -23,7 +23,7 @@ jobs:
 
       - name: Publish WAR to GitHub Packages
         run: |
-          mvn deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
+          echo "${{ secrets.GITHUB_PAT }}" | mvn deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
 
   deploy:
     runs-on: ubuntu-latest
