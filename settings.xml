@@ -4,8 +4,8 @@
     ...
     <server>
       <id>github</id>
-      <username>${env.GITHUB_USERNAME}</username>
-      <password>${env.GITHUB_TOKEN}</password>
+      <username>pravesh-77</username>
+      <password>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</password>
     </server>
     ...
   </servers>
