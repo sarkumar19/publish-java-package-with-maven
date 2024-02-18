@@ -18,23 +18,13 @@ jobs:
           java-version: '11'
           distribution: adopt
 
-      - name: Build with Maven
-        run: mvn --batch-mode clean package
+      - name: Build with Maven (enable debug logging)
+        run: mvn --batch-mode -X clean package  # Add -X flag for debug logging
 
-      - name: Publish WAR to GitHub Packages
+      - name: Publish WAR to GitHub Packages (enable debug logging)
         run: |
-          echo "${{ secrets.GH_PACKAGE_TOKEN }}" | mvn deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
+          echo "${{ secrets.GH_PACKAGE_TOKEN }}" | mvn -X deploy -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
 
-      - name: Create Release
-        run: |
-          TAG_NAME=$(git describe --tags)
-          TAG_BODY=$(git log -1 --pretty=%B)
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases" \
-            -d "{\"tag_name\": \"$TAG_NAME\", \"name\": \"$TAG_NAME\", \"body\": \"$TAG_BODY\"}"
-          
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -50,7 +40,7 @@ jobs:
           wget -S --header="Authorization: token ${{ secrets.GH_PACKAGE_TOKEN }}" \
                -O /opt/tomcat/webapps/java-maven4.war \
                -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
-      
+
       - name: Restart Tomcat
         run: |
           /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
