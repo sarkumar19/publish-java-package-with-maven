@@ -21,16 +21,20 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode clean package -X
 
+      - name: Clear GITHUB_TOKEN
+        run: |
+          echo "::unset-env name=GITHUB_TOKEN"
+
+      - name: Authenticate to GitHub Packages
+        run: echo "***" | gh auth login --with-token
+
       - name: Publish WAR to GitHub Packages
         run: |
-          echo "***" | gh auth login --with-token
           gh package repo upload pravesh-77/publish-java-package-with-maven \
             --file target/java-maven4-1.1.war \
             --name java-maven4 \
             --version 1.1 \
             --package-type war
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,6 +51,7 @@ jobs:
           wget -S --header="Authorization: token ${{ secrets.GH_PACKAGE_TOKEN }}" \
                -O /opt/tomcat/webapps/java-maven4.war \
                -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
+
       - name: Restart Tomcat
         run: |
           /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
