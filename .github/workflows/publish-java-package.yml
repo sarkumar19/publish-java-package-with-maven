@@ -21,11 +21,8 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode clean package
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: java-package
-          path: target/*.war
+      - name: Publish WAR to GitHub Packages
+        run: mvn deploy
 
   deploy:
     runs-on: ubuntu-latest
@@ -34,8 +31,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Add any necessary setup steps for Tomcat deployment here
-      
       - name: Make webapps directory
         run: mkdir -p /opt/tomcat/webapps
       
@@ -43,9 +38,8 @@ jobs:
         run: |
           wget -S --header="Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -O /opt/tomcat/webapps/java-maven4.war \
-               -L "https://github.com/pravesh-77/publish-java-package-with-maven/raw/main/target/java-maven4-1.1.war"
-          # Update the URL and filename according to your requirements
-          
+               -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app4/java-maven4/1.1/java-maven4-1.1.war"
+
       - name: Restart Tomcat
         run: |
-         /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
+          /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
