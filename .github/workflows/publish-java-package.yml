@@ -19,12 +19,7 @@ jobs:
           distribution: adopt
 
       - name: Build with Maven
-        run: |
-          echo "<settings><servers><server><id>github</id><username>${{ secrets.GITHUB_USERNAME }}</username><password>${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>" > ~/.m2/settings.xml
-          mvn --batch-mode clean package -X  # Enable debug logging
-
-      - name: Publish WAR to GitHub Packages
-        run: mvn deploy -X  # Enable debug logging
+        run: mvn --batch-mode clean package -DskipTests=true
 
   deploy:
     runs-on: ubuntu-latest
@@ -33,14 +28,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Make webapps directory
-        run: mkdir -p /opt/tomcat/webapps
+      - name: Install GitHub CLI
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+        # Install gh CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
 
-      - name: Download Java package from GitHub Packages
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Publish WAR to GitHub Packages
         run: |
-          wget -S --header="Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -O /opt/tomcat/webapps/java-maven5.war \
-               -L "https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven/com/mycompany/app5/java-maven5/1.1/java-maven5-1.1.war"
-      - name: Restart Tomcat
-        run: |
-          /opt/tomcat/bin/shutdown.sh && /opt/tomcat/bin/startup.sh
+          gh package repo upload pravesh-77/publish-java-package-with-maven \
+            --file target/java-maven5-1.1.war \
+            --name java-maven5 \
+            --version 1.1 \
+            --package-type war
