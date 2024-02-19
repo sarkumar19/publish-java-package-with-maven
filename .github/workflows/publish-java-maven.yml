@@ -28,6 +28,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Clear GH_TOKEN variable
+        run: unset GH_TOKEN
+
       - name: Install GitHub CLI
         run: |
           sudo apt-get update
