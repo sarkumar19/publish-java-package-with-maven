@@ -40,7 +40,6 @@ jobs:
       - name: Create Release
         run: |
           gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
-
       - name: Upload WAR to Release
         run: |
           war_file="$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
@@ -49,3 +48,6 @@ jobs:
             exit 1
           fi
           gh release upload java-maven5-1.1 "$war_file" --clobber
+
+      - name: Deploy Java package on Apache Tomcat locally
+        run: ansible-playbook deploy.yml
