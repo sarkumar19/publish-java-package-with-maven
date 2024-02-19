@@ -17,23 +17,16 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven</url>
-    </repository>
-  </distributionManagement>
-
   <dependencies>
     <!-- Add your dependencies here -->
-    <!-- Example: JUnit -->
+    <!-- Example: Servlet API -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
     </dependency>
+    <!-- Add other dependencies as needed -->
   </dependencies>
 
   <build>
@@ -44,8 +37,6 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.2</version>
         <configuration>
-          <warName>${project.artifactId}</warName>
-          <!-- Generate a default web.xml -->
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
