@@ -28,7 +28,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Clear GH_TOKEN variable
+      - name: Unset GH_TOKEN variable
         run: unset GH_TOKEN
 
       - name: Install GitHub CLI
@@ -40,8 +40,6 @@ jobs:
           sudo apt-get install -y gh
 
       - name: Set up GitHub CLI authentication
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh auth login --with-token
 
       - name: List files in target directory
