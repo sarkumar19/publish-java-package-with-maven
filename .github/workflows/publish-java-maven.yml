@@ -19,7 +19,7 @@ jobs:
           distribution: adopt
 
       - name: Build with Maven
-        run: mvn --batch-mode clean package -DskipTests=true
+        run: mvn clean package -DskipTests=true
 
   deploy:
     runs-on: ubuntu-latest
@@ -30,14 +30,17 @@ jobs:
 
       - name: Install GitHub CLI
         uses: actions/setup-node@v2
-         with:
+        with:
           node-version: '14'
-        # Install gh CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh
+
+      - name: Add GitHub CLI repository
+        run: sudo apt-add-repository https://cli.github.com/packages
+
+      - name: Update package lists for apt
+        run: sudo apt-get update
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
 
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
