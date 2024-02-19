@@ -37,6 +37,14 @@ jobs:
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
           echo "::set-output name=war_file::$war_file"
 
+      - name: Check if WAR file exists
+        run: |
+          war_file="${{ steps.find_war.outputs.war_file }}"
+          if [ -z "$war_file" ]; then
+            echo "ERROR: WAR file not found."
+            exit 1
+          fi
+
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<<"${{ secrets.GH_TOKEN }}"
 
@@ -46,4 +54,4 @@ jobs:
 
       - name: Upload WAR to Release
         run: |
-          gh release upload java-maven5-1.1 "${{ steps.find_war.outputs.war_file }}" --clobber
+          gh release upload java-maven5-1.1 "$war_file" --clobber
