@@ -33,19 +33,22 @@ jobs:
         run: |
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
           if [ -z "$war_file" ]; then
-            echo "ERROR: WAR file not found."
-            exit 1
+            echo "WAR file not found. Skipping release creation and upload."
+            touch war_file_not_found
+          else
+            echo "::set-output name=war_file::$war_file"
           fi
-          echo "::set-output name=war_file::$war_file"
 
       - name: Authenticate with GitHub CLI
+        if: success() && !cancelled()
         run: gh auth login --with-token <<<"${{ secrets.GH_TOKEN }}"
 
       - name: Create Release
-        run: |
-          gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
+        if: success() && !cancelled() && !failure() && !contains(needs.find_and_check_war.outputs, 'war_file_not_found')
+        run: gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
 
       - name: Upload WAR to Release
+        if: success() && !cancelled() && !failure() && !contains(needs.find_and_check_war.outputs, 'war_file_not_found')
         run: |
           war_file="${{ steps.find_and_check_war.outputs.war_file }}"
           gh release upload java-maven5-1.1 "$war_file" --clobber
