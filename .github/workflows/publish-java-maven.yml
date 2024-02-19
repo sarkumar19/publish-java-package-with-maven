@@ -51,4 +51,5 @@ jobs:
 
       - name: Upload WAR to Release
         run: |
-          gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
+          gh release upload java-maven5-1.1 /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target/java-maven4.war --clobber
+
