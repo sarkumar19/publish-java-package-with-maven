@@ -21,15 +21,15 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests=true
 
+      - name: Set WAR file path
+        run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: List files in target directory
-        run: ls -l $GITHUB_WORKSPACE/target
 
       - name: Set WAR file path
         run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
@@ -43,10 +43,9 @@ jobs:
 
       - name: Upload WAR to Release
         run: |
-         war_file="$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
-         if [ ! -f "$war_file" ]; then
-         echo "ERROR: WAR file not found."
-         exit 1
-         fi
-         gh release upload java-maven5-1.1 "$war_file" --clobber
-
+          war_file="$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
+          if [ ! -f "$war_file" ]; then
+            echo "ERROR: WAR file not found."
+            exit 1
+          fi
+          gh release upload java-maven5-1.1 "$war_file" --clobber
