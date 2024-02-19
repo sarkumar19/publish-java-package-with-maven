@@ -45,13 +45,12 @@ jobs:
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
           echo "::set-output name=war_file::$war_file"
 
-      - name: Create Release
-        run: gh release create java-maven5-1.1
-
-      - name: Upload WAR to Release
+      - name: Create Release and Upload WAR
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets
           asset_path: ${{ steps.find_war.outputs.war_file }}
           asset_name: java-maven5-1.1.war
           asset_content_type: application/java-archive
