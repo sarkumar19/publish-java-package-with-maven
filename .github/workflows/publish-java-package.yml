@@ -30,10 +30,10 @@ jobs:
 
       - name: Install GitHub CLI
         uses: actions/setup-node@v2
-        with:
-         node-version: '14'
+         with:
+          node-version: '14'
         # Install gh CLI
-         run: |
+        run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
           sudo apt-add-repository https://cli.github.com/packages
           sudo apt update
@@ -44,8 +44,6 @@ jobs:
 
       - name: Publish WAR to GitHub Releases
         run: |
-         gh release upload pravesh-77/publish-java-package-with-maven \
-         target/java-maven5-1.1.war \
-         --clobber
-
-
+          gh release upload pravesh-77/publish-java-package-with-maven \
+            target/java-maven5-1.1.war \
+            --clobber
