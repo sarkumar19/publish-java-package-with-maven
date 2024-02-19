@@ -37,23 +37,16 @@ jobs:
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
           echo "::set-output name=war_file::$war_file"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up GitHub CLI
+        uses: actions/setup-node@v2
         with:
-          tag_name: java-maven5-1.1
-          release_name: Java Maven 5 v1.1
-          draft: false
-          prerelease: false
+          node-version: '14'
+          cache: 'npm'
+
+      - name: Create Release
+        run: |
+          gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
 
       - name: Upload WAR to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.find_war.outputs.war_file }}
-          asset_name: java-maven5-1.1.war
-          asset_content_type: application/java-archive
+        run: |
+          gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
