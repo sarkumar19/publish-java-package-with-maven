@@ -36,6 +36,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh
 
+      - name: Set up GitHub CLI authentication
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh auth login --with-token
+
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
 
