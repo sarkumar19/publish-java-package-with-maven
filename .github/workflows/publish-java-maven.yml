@@ -37,12 +37,11 @@ jobs:
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
           echo "::set-output name=war_file::$war_file"
 
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
+
       - name: Create Release
-        run: |
-          gh auth login --with-token
-          gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
+        run: gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
 
       - name: Upload WAR to Release
-        run: |
-          gh auth login --with-token
-          gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
+        run: gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
