@@ -38,9 +38,9 @@ jobs:
 
       # Authenticate with GitHub CLI using the Personal Access Token
       - name: Set up GitHub CLI authentication
-        env:
-          GH_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
-        run: gh auth login --with-token
+        run: |
+          unset GH_TOKEN
+          gh auth login --with-token <<<"${{ secrets.GH_PACKAGE_TOKEN }}"
 
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
