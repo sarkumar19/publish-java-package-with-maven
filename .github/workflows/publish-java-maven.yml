@@ -28,6 +28,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files in target directory
+        run: ls -l $GITHUB_WORKSPACE/target
+
+      - name: Find WAR file
+        run: |
+          war_file=$(ls $GITHUB_WORKSPACE/target/*.war | grep -v '\.original$' | head -n 1)
+          if [ -z "$war_file" ]; then
+            echo "ERROR: WAR file not found."
+            exit 1
+          fi
+          echo "::set-output name=war_file::$war_file"
+
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<<"${{ secrets.GH_TOKEN }}"
 
@@ -37,4 +49,5 @@ jobs:
 
       - name: Upload WAR to Release
         run: |
-          gh release upload java-maven5-1.1 $GITHUB_WORKSPACE/target/java-maven5-1.1/java-maven5-1.1.war --clobber
+          war_file="${{ steps.find_war.outputs.war_file }}"
+          gh release upload java-maven5-1.1 "$war_file" --clobber
