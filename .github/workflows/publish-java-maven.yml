@@ -30,7 +30,7 @@ jobs:
 
       - name: Install GitHub CLI
         uses: actions/setup-node@v2
-        with:
+         with:
           node-version: '14'
         # Install gh CLI
         run: |
