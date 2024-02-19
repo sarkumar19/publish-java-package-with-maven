@@ -11,9 +11,16 @@
     tomcat_webapps_dir: "/opt/tomcat/webapps"
     local_git_repo_path: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven"
   tasks:
+    - name: Ensure Tomcat bin directory exists
+      stat:
+        path: "{{ tomcat_bin_dir }}"
+      register: tomcat_bin_stat
+      failed_when: tomcat_bin_stat.stat.isdir is not defined
+
     - name: Stop Tomcat
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
+      when: tomcat_bin_stat.stat.isdir
 
     - name: Download Java package from GitHub Packages
       uri:
@@ -21,32 +28,44 @@
         dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         method: GET
         status_code: 200
-      register: download_result
-      until: download_result is succeeded
+        headers:
+          Authorization: "Bearer {{ github_token }}"  # Replace `github_token` with your GitHub token
       retries: 3
       delay: 10
+      until: download_result is succeeded
+      when: tomcat_bin_stat.stat.isdir
 
     - name: Move Java package to Tomcat webapps directory
       copy:
         src: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
+      when: tomcat_bin_stat.stat.isdir
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
+      when: tomcat_bin_stat.stat.isdir
+
+    - name: Initialize local Git repository
+      command: "git init"
+      args:
+        chdir: "{{ local_git_repo_path }}"
+      when: tomcat_bin_stat.stat.isdir
 
     - name: Commit changes to local Git repository
       shell: |
-        cd "{{ local_git_repo_path }}"
         git add target/java-maven4-1.1.war
         git commit -m "Add Java package WAR"
       args:
-        executable: /bin/
+        chdir: "{{ local_git_repo_path }}"
+        executable: /bin/bash
+      when: tomcat_bin_stat.stat.isdir
 
     - name: Push changes to GitHub
       shell: |
-        cd "{{ local_git_repo_path }}"
         git push origin main
       args:
+        chdir: "{{ local_git_repo_path }}"
         executable: /bin/bash
       become: false
       ignore_errors: yes
+      when: tomcat_bin_stat.stat.isdir
