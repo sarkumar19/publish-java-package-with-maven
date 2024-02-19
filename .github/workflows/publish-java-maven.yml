@@ -51,8 +51,7 @@ jobs:
           echo "::set-output name=war_file::$war_file"
 
       - name: Create Release
-        run: |
-          gh release create java-maven5-1.1
+        run: gh release create java-maven5-1.1
 
       - name: Upload WAR to Release
         run: gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
