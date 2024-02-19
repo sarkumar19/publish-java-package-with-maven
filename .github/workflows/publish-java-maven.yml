@@ -31,17 +31,8 @@ jobs:
       - name: List files in target directory
         run: ls -l $GITHUB_WORKSPACE/target
 
-      - name: Find and check WAR file
-        id: find_and_check_war
-        run: |
-          shopt -s nullglob
-          war_files=( $GITHUB_WORKSPACE/target/*.war )
-          if [ ${#war_files[@]} -eq 0 ]; then
-            echo "ERROR: No WAR files found."
-            exit 1
-          else
-            echo "::set-output name=war_file::${war_files[0]}"
-          fi
+      - name: Set WAR file path
+        run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
 
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<<"${{ secrets.GH_TOKEN }}"
