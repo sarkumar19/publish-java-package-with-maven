@@ -31,13 +31,14 @@ jobs:
       - name: Find and check WAR file
         id: find_and_check_war
         run: |
-          war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
-          if [ -z "$war_file" ]; then
-            echo "WAR file not found. Skipping release creation and upload."
-            touch war_file_not_found
-          else
-            echo "::set-output name=war_file::$war_file"
-          fi
+         war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
+         if [ -z "$war_file" ]; then
+         echo "ERROR: WAR file not found."
+         exit 1
+         else
+         echo "Found WAR file: $war_file"
+         echo "::set-output name=war_file::$war_file"
+         fi
 
       - name: Authenticate with GitHub CLI
         if: success() && !cancelled()
