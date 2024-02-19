@@ -28,13 +28,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo apt-add-repository -y ppa:linuxuprising/java
-          sudo apt-get update
-          sudo apt-get install -y gh
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
 
@@ -43,14 +36,24 @@ jobs:
         run: |
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
           echo "::set-output name=war_file::$war_file"
+
       - name: Create Release
-        run: gh release create java-maven5-1.1
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: java-maven5-1.1
+          release_name: Java Maven 5 v1.1
+          draft: false
+          prerelease: false
 
       - name: Upload WAR to Release
-        run: |
-          war_file_path="${{ steps.find_war.outputs.war_file }}"
-          if [ -n "$war_file_path" ]; then
-            gh release upload java-maven5-1.1 "$war_file_path" --clobber
-          else
-            echo "WAR file not found."
-          fi
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.find_war.outputs.war_file }}
+          asset_name: java-maven5-1.1.war
+          asset_content_type: application/java-archive
