@@ -36,12 +36,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh
 
-      # Authenticate with GitHub CLI using the Personal Access Token
-      - name: Set up GitHub CLI authentication
-        run: |
-          unset GH_TOKEN
-          gh auth login --with-token <<<"${{ secrets.GH_PACKAGE_TOKEN }}"
-
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
 
@@ -55,10 +49,9 @@ jobs:
         run: gh release create java-maven5-1.1
 
       - name: Upload WAR to Release
-        run: |
-          war_file_path="${{ steps.find_war.outputs.war_file }}"
-          if [ -n "$war_file_path" ]; then
-            gh release upload java-maven5-1.1 "$war_file_path" --clobber
-          else
-            echo "WAR file not found."
-          fi
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.find_war.outputs.war_file }}
+          asset_name: java-maven5-1.1.war
+          asset_content_type: application/java-archive
