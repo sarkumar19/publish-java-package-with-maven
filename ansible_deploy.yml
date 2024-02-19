@@ -10,17 +10,17 @@
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
     local_git_repo_path: "/mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven"
+    github_token: "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"
   tasks:
     - name: Ensure Tomcat bin directory exists
-      stat:
+      file:
         path: "{{ tomcat_bin_dir }}"
-      register: tomcat_bin_stat
-      failed_when: false  # Fail gracefully even if the directory doesn't exist
+        state: directory
+        mode: 0755
 
     - name: Stop Tomcat
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
-      when: tomcat_bin_stat.stat.exists
 
     - name: Download Java package from GitHub Packages
       uri:
@@ -28,6 +28,8 @@
         dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         method: GET
         status_code: 200
+        headers:
+          Authorization: "Bearer {{ github_token }}"
       register: download_result
       until: download_result is succeeded
       retries: 3
@@ -37,11 +39,9 @@
       copy:
         src: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
-      when: tomcat_bin_stat.stat.exists
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
-      when: tomcat_bin_stat.stat.exists
 
     - name: Commit changes to local Git repository
       shell: |
@@ -50,7 +50,6 @@
         git commit -m "Add Java package WAR"
       args:
         executable: /bin/
-      when: tomcat_bin_stat.stat.exists
 
     - name: Push changes to GitHub
       shell: |
@@ -60,4 +59,3 @@
         executable: /bin/bash
       become: false
       ignore_errors: yes
-      when: tomcat_bin_stat.stat.exists
