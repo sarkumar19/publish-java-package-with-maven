@@ -50,5 +50,5 @@ jobs:
           gh release create java-maven5-1.1
 
       - name: Upload WAR to Release
-        run: gh release upload java-maven5-1.1 target/java-maven5-1.1.war --clobber
+        run: gh release upload java-maven5-1.1 target/java-maven4.war --clobber
 
