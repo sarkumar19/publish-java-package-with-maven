@@ -15,12 +15,12 @@
       stat:
         path: "{{ tomcat_bin_dir }}"
       register: tomcat_bin_stat
-      failed_when: tomcat_bin_stat.stat.isdir is not defined
+      failed_when: false  # Fail gracefully even if the directory doesn't exist
 
     - name: Stop Tomcat
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
       ignore_errors: yes
-      when: tomcat_bin_stat.stat.isdir
+      when: tomcat_bin_stat.stat.exists
 
     - name: Download Java package from GitHub Packages
       uri:
@@ -28,44 +28,36 @@
         dest: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         method: GET
         status_code: 200
-        headers:
-          Authorization: "Bearer {{ github_token }}"  # Replace `github_token` with your GitHub token
+      register: download_result
+      until: download_result is succeeded
       retries: 3
       delay: 10
-      until: download_result is succeeded
-      when: tomcat_bin_stat.stat.isdir
 
     - name: Move Java package to Tomcat webapps directory
       copy:
         src: "{{ local_git_repo_path }}/target/java-maven4-1.1.war"
         dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
-      when: tomcat_bin_stat.stat.isdir
+      when: tomcat_bin_stat.stat.exists
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
-      when: tomcat_bin_stat.stat.isdir
-
-    - name: Initialize local Git repository
-      command: "git init"
-      args:
-        chdir: "{{ local_git_repo_path }}"
-      when: tomcat_bin_stat.stat.isdir
+      when: tomcat_bin_stat.stat.exists
 
     - name: Commit changes to local Git repository
       shell: |
+        cd "{{ local_git_repo_path }}"
         git add target/java-maven4-1.1.war
         git commit -m "Add Java package WAR"
       args:
-        chdir: "{{ local_git_repo_path }}"
-        executable: /bin/bash
-      when: tomcat_bin_stat.stat.isdir
+        executable: /bin/
+      when: tomcat_bin_stat.stat.exists
 
     - name: Push changes to GitHub
       shell: |
+        cd "{{ local_git_repo_path }}"
         git push origin main
       args:
-        chdir: "{{ local_git_repo_path }}"
         executable: /bin/bash
       become: false
       ignore_errors: yes
-      when: tomcat_bin_stat.stat.isdir
+      when: tomcat_bin_stat.stat.exists
