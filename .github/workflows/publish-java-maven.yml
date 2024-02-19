@@ -28,28 +28,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files in target directory
+        run: ls -l $GITHUB_WORKSPACE/target
+
       - name: Find and check WAR file
         id: find_and_check_war
         run: |
-         war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
-         if [ -z "$war_file" ]; then
-         echo "ERROR: WAR file not found."
-         exit 1
-         else
-         echo "Found WAR file: $war_file"
-         echo "::set-output name=war_file::$war_file"
-         fi
+          war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
+          if [ -z "$war_file" ]; then
+            echo "ERROR: WAR file not found."
+            exit 1
+          fi
+          echo "::set-output name=war_file::$war_file"
 
       - name: Authenticate with GitHub CLI
-        if: success() && !cancelled()
         run: gh auth login --with-token <<<"${{ secrets.GH_TOKEN }}"
 
       - name: Create Release
-        if: success() && !cancelled() && !failure() && !contains(needs.find_and_check_war.outputs, 'war_file_not_found')
-        run: gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
+        run: |
+          gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
 
       - name: Upload WAR to Release
-        if: success() && !cancelled() && !failure() && !contains(needs.find_and_check_war.outputs, 'war_file_not_found')
         run: |
           war_file="${{ steps.find_and_check_war.outputs.war_file }}"
           gh release upload java-maven5-1.1 "$war_file" --clobber
