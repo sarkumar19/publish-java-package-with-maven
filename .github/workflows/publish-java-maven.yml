@@ -35,7 +35,6 @@ jobs:
           sudo apt-add-repository -y ppa:linuxuprising/java
           sudo apt-get update
           sudo apt-get install -y gh
-
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
 
@@ -44,7 +43,6 @@ jobs:
         run: |
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
           echo "::set-output name=war_file::$war_file"
-
       - name: Create Release
         run: gh release create java-maven5-1.1
 
