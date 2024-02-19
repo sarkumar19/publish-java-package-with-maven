@@ -32,6 +32,7 @@ jobs:
         run: ls -l $GITHUB_WORKSPACE/target
 
       - name: Find WAR file
+        id: find_war
         run: |
           war_file=$(ls $GITHUB_WORKSPACE/target/*.war | grep -v '\.original$' | head -n 1)
           if [ -z "$war_file" ]; then
