@@ -34,7 +34,7 @@ jobs:
       - name: Find WAR file
         id: find_war
         run: |
-          war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
+          war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war" | head -n 1)
           echo "::set-output name=war_file::$war_file"
 
       - name: Create Release
