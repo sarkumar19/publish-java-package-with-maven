@@ -36,6 +36,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh
 
+      # Authenticate with GitHub CLI using the Personal Access Token
+      - name: Set up GitHub CLI authentication
+        run: gh auth login --with-token <<<"${{ secrets.GH_PACKAGE_TOKEN }}"
+
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
 
@@ -43,11 +47,7 @@ jobs:
         id: find_war
         run: |
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
-          if [ -n "$war_file" ]; then
-            echo "::set-output name=war_file::$war_file"
-          else
-            echo "No WAR file found in the target directory."
-          fi
+          echo "::set-output name=war_file::$war_file"
 
       - name: Create Release
         run: gh release create java-maven5-1.1
@@ -58,5 +58,5 @@ jobs:
           if [ -n "$war_file_path" ]; then
             gh release upload java-maven5-1.1 "$war_file_path" --clobber
           else
-            echo "Skipping upload as no WAR file was found."
+            echo "WAR file not found."
           fi
