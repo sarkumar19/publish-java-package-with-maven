@@ -43,7 +43,11 @@ jobs:
         id: find_war
         run: |
           war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
-          echo "::set-output name=war_file::$war_file"
+          if [ -n "$war_file" ]; then
+            echo "::set-output name=war_file::$war_file"
+          else
+            echo "No WAR file found in the target directory."
+          fi
 
       - name: Create Release
         run: gh release create java-maven5-1.1
@@ -54,5 +58,5 @@ jobs:
           if [ -n "$war_file_path" ]; then
             gh release upload java-maven5-1.1 "$war_file_path" --clobber
           else
-            echo "WAR file not found."
+            echo "Skipping upload as no WAR file was found."
           fi
