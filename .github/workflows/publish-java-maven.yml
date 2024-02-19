@@ -28,9 +28,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Unset GH_TOKEN variable
-        run: unset GH_TOKEN
-
       - name: Install GitHub CLI
         run: |
           sudo apt-get update
@@ -38,9 +35,6 @@ jobs:
           sudo apt-add-repository -y ppa:linuxuprising/java
           sudo apt-get update
           sudo apt-get install -y gh
-
-      - name: Set up GitHub CLI authentication
-        run: gh auth login --with-token
 
       - name: List files in target directory
         run: ls $GITHUB_WORKSPACE/target
@@ -55,4 +49,10 @@ jobs:
         run: gh release create java-maven5-1.1
 
       - name: Upload WAR to Release
-        run: gh release upload java-maven5-1.1 ${{ steps.find_war.outputs.war_file }} --clobber
+        run: |
+          war_file_path="${{ steps.find_war.outputs.war_file }}"
+          if [ -n "$war_file_path" ]; then
+            gh release upload java-maven5-1.1 "$war_file_path" --clobber
+          else
+            echo "WAR file not found."
+          fi
