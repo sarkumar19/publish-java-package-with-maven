@@ -19,7 +19,7 @@ jobs:
           distribution: adopt
 
       - name: Build with Maven
-        run: mvn --batch-mode clean package -DskipTests=true
+        run: mvn -B package --file pom.xml
 
   deploy:
     runs-on: ubuntu-latest
