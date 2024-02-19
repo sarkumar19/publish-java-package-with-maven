@@ -28,6 +28,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files in target directory
+        run: ls -l $GITHUB_WORKSPACE/target
+
       - name: Set WAR file path
         run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
 
@@ -37,7 +40,11 @@ jobs:
       - name: Create Release
         run: |
           gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
-
-      - name: Deploy Java package on Apache Tomcat locally
-        run: ansible-playbook ansible_deploy.yml
-l
+      - name: Upload WAR to Release
+        run: |
+         war_file="$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
+         if [ ! -f "$war_file" ]; then
+         echo "ERROR: WAR file not found."
+         exit 1
+         fi
+         gh release upload java-maven5-1.1 "$war_file" --clobber
