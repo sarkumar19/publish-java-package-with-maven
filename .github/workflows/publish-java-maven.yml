@@ -36,16 +36,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh
 
-      - name: Authenticate with GitHub CLI
-        run: echo "${{ secrets.PAT }}" | gh auth login --with-token
-
       - name: List files in target directory
-        run: ls /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target
+        run: ls $GITHUB_WORKSPACE/target
 
       - name: Find WAR file
         id: find_war
         run: |
-          war_file=$(find /mnt/c/Users/Admin/ansible_project/publish-java-package-with-maven/target -type f -name "*.war")
+          war_file=$(find $GITHUB_WORKSPACE/target -type f -name "*.war")
           echo "::set-output name=war_file::$war_file"
 
       - name: Create Release
