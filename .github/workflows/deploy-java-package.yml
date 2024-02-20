@@ -17,8 +17,6 @@ jobs:
           # Alternatively, use curl or wget to download the package
 
       - name: Deploy to Apache Tomcat
-        uses: ansible/ansible-playbook@v2
-        with:
-          playbook: ansible_deploy.yml
+        run: ansible-playbook ansible_deploy.ymll
         env:
           GITHUB_TOKEN: ${{ secrets.GITUSER_TOKEN }}
