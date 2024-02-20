@@ -3,9 +3,9 @@
   
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mycompany.app5</groupId>
-  <artifactId>java-maven5</artifactId>
-  <version>1.1</version>
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>java-maven</artifactId>
+  <version>1.2</version>
   <packaging>war</packaging> <!-- Explicitly specify packaging type as WAR -->
 
   <name>my-app</name>
