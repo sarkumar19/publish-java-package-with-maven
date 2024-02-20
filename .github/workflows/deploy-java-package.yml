@@ -12,11 +12,12 @@ jobs:
     steps:
       - name: Download Java package from GitHub Packages
         run: |
-          # Use GitHub CLI or another tool to download the Java package
-          gh package download pravesh-77/publish-java-package-with-maven@1.2
-          # Alternatively, use curl or wget to download the package
+          # Download the Java package using curl
+          curl -sSL -o package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.2/contents/java-maven5-1.1.war?ref=main
+          # Alternatively, use wget:
+          # wget -q -O package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.2/contents/java-maven5-1.1.war?ref=main
 
       - name: Deploy to Apache Tomcat
-        run: ansible-playbook ansible_deploy.ymll
+        run: ansible-playbook ansible_deploy.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITUSER_TOKEN }}
