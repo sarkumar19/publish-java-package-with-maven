@@ -22,3 +22,5 @@ jobs:
         run: mvn clean package 
       - name: publish package to github packages
         run: mvn --batch-mode deploy
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITUSER_TOKEN }}
