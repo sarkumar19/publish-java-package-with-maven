@@ -19,16 +19,4 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests=true
-
-      #- name: Set WAR file path
-        #run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
-
-      #- name: publish package
-        #run: mvn --batch-mode deploy $GITHUB_WORKSPACE/target/java-maven5-1.1.war
-
-      - name: Set up GH_PACKAGE_TOKEN
-        env:
-          GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
-
-  
+        run: mvn clean package 
