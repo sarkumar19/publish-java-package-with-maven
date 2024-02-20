@@ -2,14 +2,14 @@
 - name: Deploy Java package on Apache Tomcat locally
   hosts: localhost
   connection: local
-  become: true
   gather_facts: false
   vars:
     java_package_name: java-maven5
     java_package_version: "1.1"
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
-    github_token: "{{ lookup('env', 'GH_PACKAGE_TOKEN') }}"
+    github_token: "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"
+
   tasks:
     - name: Ensure Tomcat bin directory exists
       file:
@@ -28,22 +28,11 @@
         path: "{{ tomcat_bin_dir }}/shutdown.sh"
         state: absent
 
-    - name: Fetch release assets
-      uri:
-        url: "https://api.github.com/repos/pravesh-77/publish-java-package-with-maven/releases/latest"
-        headers:
-          Authorization: "Bearer {{ github_token }}"
-          Content-Type: "application/json"
-      register: release_info
-
-    - name: Download WAR file from GitHub release
-      get_url:
-        url: "{{ item.browser_download_url }}"
-        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
-        headers:
-          Authorization: "Bearer {{ github_token }}"
-      loop: "{{ release_info.json.assets }}"
-      when: "'{{ java_package_name }}.war' in item.browser_download_url"
+    - name: Download Java package from GitHub release
+      shell: gh release download java-maven5-1.1 --repo pravesh-77/publish-java-package-with-maven --pattern "*.war" --dir "{{ tomcat_webapps_dir }}"
+      environment:
+        GITHUB_TOKEN: "{{ github_token }}"
+      register: download_result
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
