@@ -1,0 +1,24 @@
+name: Deploy to Apache Tomcat
+
+on:
+  push:
+    branches:
+      - deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Java package from GitHub Packages
+        run: |
+          # Use GitHub CLI or another tool to download the Java package
+          gh package download owner/repo@version --registry ghcr.io
+          # Alternatively, use curl or wget to download the package
+
+      - name: Deploy to Apache Tomcat
+        uses: ansible/ansible-playbook@v2
+        with:
+          playbook: ansible/deploy.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
