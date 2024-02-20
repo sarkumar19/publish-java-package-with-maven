@@ -1,8 +1,7 @@
 name: Publish Java Package
 
-on:
-  push:
-    branches:
+on: [workflow_dispatch]
+  
       
 
 jobs:
