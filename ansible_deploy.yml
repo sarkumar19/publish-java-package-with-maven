@@ -16,11 +16,18 @@
       file:
         path: "{{ tomcat_bin_dir }}"
         state: directory
-        mode: 0755
+        mode: '0755'
 
     - name: Stop Tomcat
       command: "{{ tomcat_bin_dir }}/shutdown.sh"
-      ignore_errors: yes
+      ignore_errors: true
+      async: 300
+      poll: 0
+
+    - name: Wait for Tomcat to stop
+      wait_for:
+        path: "{{ tomcat_bin_dir }}/shutdown.sh"
+        state: absent
 
     - name: Download Java package from GitHub Packages
       uri:
@@ -49,7 +56,7 @@
         git add target/java-maven4-1.1.war
         git commit -m "Add Java package WAR"
       args:
-        executable: /bin/bash
+        executable: /bin/
 
     - name: Push changes to GitHub
       shell: |
@@ -58,4 +65,4 @@
       args:
         executable: /bin/bash
       become: false
-      ignore_errors: yes
+      ignore_errors: true
