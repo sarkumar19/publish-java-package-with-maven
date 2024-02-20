@@ -24,25 +24,11 @@ jobs:
       - name: Set WAR file path
         run: echo "::set-output name=war_file::$GITHUB_WORKSPACE/target/java-maven5-1.1.war"
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up GitHub CLI
-        uses: actions/setup-gh@v1
-        with:
-          gh-version: '2.4.0' # Adjust the version as needed
+      - name: publish package
+        run: mvn --batch-mode deploy $GITHUB_WORKSPACE/target/java-maven5-1.1.war
 
       - name: Set up GH_PACKAGE_TOKEN
         env:
           GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
 
-      - name: Create Release
-        run: |
-          gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
-
-      - name: Deploy Java package on Apache Tomcat locally
-        run: ansible-playbook ansible_deploy.yml
+  
