@@ -31,12 +31,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Authenticate with GitHub CLI
-        run: gh auth login --with-token <<<"${{ secrets.GH_PACKAGE_TOKEN }}"
-
       - name: Create Release
         run: |
           gh release create java-maven5-1.1 --title "Java Maven 5 v1.1" --notes "Release for Java Maven 5 v1.1" --target main
-      
+
       - name: Deploy Java package on Apache Tomcat locally
         run: ansible-playbook ansible_deploy.yml
