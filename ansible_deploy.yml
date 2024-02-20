@@ -49,7 +49,7 @@
         git add target/java-maven4-1.1.war
         git commit -m "Add Java package WAR"
       args:
-        executable: /bin/
+        executable: /bin/bash
 
     - name: Push changes to GitHub
       shell: |
