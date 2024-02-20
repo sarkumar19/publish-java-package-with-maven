@@ -3,7 +3,7 @@ name: Deploy to Apache Tomcat
 on:
   push:
     branches:
-      - deployment
+      - main
 
 jobs:
   deploy:
@@ -13,12 +13,12 @@ jobs:
       - name: Download Java package from GitHub Packages
         run: |
           # Use GitHub CLI or another tool to download the Java package
-          gh package download pravesh-77/publish-java-package-with-maven@version --registry ghcr.io
+          gh package download pravesh-77/publish-java-package-with-maven@1.2
           # Alternatively, use curl or wget to download the package
 
       - name: Deploy to Apache Tomcat
         uses: ansible/ansible-playbook@v2
         with:
-          playbook: ansible/deploy.yml
+          playbook: ansible_deploy.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITUSER_TOKEN }}
