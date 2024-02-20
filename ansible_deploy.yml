@@ -9,7 +9,8 @@
     java_package_version: "1.1"
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
-    github_token: "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"
+    github_token: ${{ secrets.GH_TOKEN }} # Use GitHub token from secrets
+
   tasks:
     - name: Ensure Tomcat bin directory exists
       file:
@@ -35,15 +36,16 @@
           Authorization: "Bearer {{ github_token }}"
           Content-Type: "application/json"
       register: release_info
+      failed_when: release_info.status != 200
 
     - name: Download WAR file from GitHub release
       get_url:
         url: "{{ item.browser_download_url }}"
-        dest: "{{ tomcat_webapps_dir }}/{{ java-maven5 }}.war"
+        dest: "{{ tomcat_webapps_dir }}/{{ java_package_name }}.war"
         headers:
           Authorization: "Bearer {{ github_token }}"
       loop: "{{ release_info.json.assets }}"
-      when: "'{{ java-maven5 }}.war' in item.browser_download_url"
+      when: "'{{ java_package_name }}.war' in item.browser_download_url"
 
     - name: Start Tomcat
       command: "{{ tomcat_bin_dir }}/startup.sh"
