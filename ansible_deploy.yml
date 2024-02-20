@@ -9,8 +9,7 @@
     java_package_version: "1.1"
     tomcat_bin_dir: "/opt/tomcat/bin"
     tomcat_webapps_dir: "/opt/tomcat/webapps"
-    github_token: ${{ secrets.GH_TOKEN }} # Use GitHub token from secrets
-
+    github_token: "{{ lookup('env', 'GH_TOKEN') }}"
   tasks:
     - name: Ensure Tomcat bin directory exists
       file:
@@ -36,7 +35,6 @@
           Authorization: "Bearer {{ github_token }}"
           Content-Type: "application/json"
       register: release_info
-      failed_when: release_info.status != 200
 
     - name: Download WAR file from GitHub release
       get_url:
