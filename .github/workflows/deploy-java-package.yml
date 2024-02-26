@@ -13,9 +13,9 @@ jobs:
       - name: Download Java package from GitHub Packages
         run: |
           # Download the Java package using curl
-          curl -sSL -o package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.2/contents/java-maven5-1.1.war?ref=main
+          curl -sSL -o package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.3/contents/java-maven5-1.1.war?ref=main
           # Alternatively, use wget:
-          # wget -q -O package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.2/contents/java-maven5-1.1.war?ref=main
+          # wget -q -O package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.3/contents/java-maven5-1.1.war?ref=main
 
       - name: Deploy to Apache Tomcat
         run: ansible-playbook -i localhost, -c local ansible_deploy.yml
