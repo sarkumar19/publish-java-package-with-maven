@@ -31,7 +31,7 @@
     - name: Download Java package from GitHub release
       shell: gh release download java-maven5-1.1 --repo pravesh-77/publish-java-package-with-maven --pattern "*.war" --dir "{{ tomcat_webapps_dir }}"
       environment:
-        GITHUB_TOKEN: "{{ github_token }}"
+        GITHUB_TOKEN: "{{ GITUSER_TOKEN }}"
       register: download_result
 
     - name: Start Tomcat
