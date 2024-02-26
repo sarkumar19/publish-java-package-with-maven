@@ -18,6 +18,6 @@ jobs:
           # wget -q -O package.war https://github.com/pravesh-77/publish-java-package-with-maven/packages/1.2/contents/java-maven5-1.1.war?ref=main
 
       - name: Deploy to Apache Tomcat
-        run: ansible-playbook ansible_deploy.yml
+        run: ansible-playbook -i localhost, -c local ansible_deploy.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITUSER_TOKEN }}
