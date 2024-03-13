@@ -21,7 +21,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/pravesh-77/publish-java-package-with-maven</url>
+      <url>https://maven.pkg.github.com/sarkumar19/publish-java-package-with-maven</url>
     </repository>
   </distributionManagement>
 
