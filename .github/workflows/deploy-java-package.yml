@@ -1,6 +1,6 @@
 name: Deploy to Apache Tomcat
 
-on:
+#on:
   push:
     branches:
       - main
